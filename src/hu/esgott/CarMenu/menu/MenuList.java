@@ -15,14 +15,10 @@ public class MenuList {
 
 	public MenuList() {
 		createMenus();
-		listView.setItems(mainMenu.getContent());
-		selectFirst();
-	}
-
-	private void selectFirst() {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
+				listView.setItems(mainMenu.getContent());
 				selectionModel.selectFirst();
 			}
 		});
@@ -59,32 +55,31 @@ public class MenuList {
 	}
 
 	private void enterLowerMenu(MenuElement menuElement) {
-		Menu selectedMenu = menuElement.next;
+		final Menu selectedMenu = menuElement.next;
 		if (selectedMenu != null) {
 			currentMenu.setPosition(selectionModel.getSelectedIndex());
 			currentMenu = selectedMenu;
-			listView.setItems(selectedMenu.getContent());
-			selectFirst();
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					listView.setItems(selectedMenu.getContent());
+					selectionModel.selectFirst();
+				}
+			});
 		}
 	}
 
 	public void exit() {
-		Menu upperMenu = currentMenu.getParentMenu();
+		final Menu upperMenu = currentMenu.getParentMenu();
 		if (upperMenu != null) {
-			listView.setItems(upperMenu.getContent());
-			select(upperMenu.getPosition());
-			currentMenu = upperMenu;
-		}
-	}
-
-	private void select(final int index) {
-		if (!selectionModel.isSelected(index)) {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					selectionModel.select(index);
+					listView.setItems(upperMenu.getContent());
+					selectionModel.select(upperMenu.getPosition());
 				}
 			});
+			currentMenu = upperMenu;
 		}
 	}
 
