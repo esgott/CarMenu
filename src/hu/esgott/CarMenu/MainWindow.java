@@ -1,14 +1,11 @@
 package hu.esgott.CarMenu;
 
+import hu.esgott.CarMenu.menu.MenuList;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionModel;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -16,7 +13,7 @@ import javafx.stage.Stage;
 
 public class MainWindow extends Application {
 
-	private SelectionModel<String> selectionModel;
+	private MenuList menuList = new MenuList();
 
 	public static void main(String[] args) {
 		launch(args);
@@ -32,29 +29,17 @@ public class MainWindow extends Application {
 
 	private Pane createPane() {
 		BorderPane pane = new BorderPane();
-		ListView<String> list = createList();
-		pane.setCenter(list);
-		Pane buttonPane = createButtons();
-		pane.setBottom(buttonPane);
+		pane.setCenter(menuList.getList());
+		pane.setBottom(createButtons());
 		return pane;
-	}
-
-	private ListView<String> createList() {
-		ListView<String> list = new ListView<>();
-		ObservableList<String> items = FXCollections.observableArrayList("egy",
-				"ketto");
-		list.setItems(items);
-		selectionModel = list.getSelectionModel();
-		selectionModel.selectFirst();
-		return list;
 	}
 
 	private Pane createButtons() {
 		HBox buttonPane = new HBox();
 		Button backButton = createBackButton();
 		Button forwardButton = createForwardButton();
-		Button enterButton = new Button("Enter");
-		Button exitButton = new Button("Exit");
+		Button enterButton = createEnterButton();
+		Button exitButton = createExitButton();
 		buttonPane.getChildren().addAll(backButton, forwardButton, enterButton,
 				exitButton);
 		return buttonPane;
@@ -65,7 +50,7 @@ public class MainWindow extends Application {
 		backButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				selectionModel.selectPrevious();
+				menuList.previous();
 			}
 		});
 		return backButton;
@@ -76,10 +61,32 @@ public class MainWindow extends Application {
 		forwardButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				selectionModel.selectNext();
+				menuList.next();
 			}
 		});
 		return forwardButton;
+	}
+
+	private Button createEnterButton() {
+		Button enterButton = new Button("Enter");
+		enterButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				menuList.enter();
+			}
+		});
+		return enterButton;
+	}
+
+	private Button createExitButton() {
+		Button exitButton = new Button("Exit");
+		exitButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				menuList.exit();
+			}
+		});
+		return exitButton;
 	}
 
 }
