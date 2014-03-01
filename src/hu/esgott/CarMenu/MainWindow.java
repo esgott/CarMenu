@@ -2,6 +2,7 @@ package hu.esgott.CarMenu;
 
 import hu.esgott.CarMenu.leap.LeapListener;
 import hu.esgott.CarMenu.menu.MenuList;
+import hu.esgott.CarMenu.menu.StatusBar;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,8 +19,9 @@ import com.leapmotion.leap.Listener;
 public class MainWindow extends Application {
 
 	private MenuList menuList = new MenuList();
+	private StatusBar statusBar = new StatusBar();
 	private Controller leapController = new Controller();
-	private Listener leapListener = new LeapListener(menuList);
+	private Listener leapListener = new LeapListener(menuList, statusBar);
 
 	public static void main(String[] args) {
 		launch(args);
@@ -40,6 +42,7 @@ public class MainWindow extends Application {
 
 	private Pane createPane() {
 		BorderPane pane = new BorderPane();
+		pane.setTop(statusBar.getPanel());
 		pane.setCenter(menuList.getList());
 		pane.setBottom(createButtons());
 		return pane;

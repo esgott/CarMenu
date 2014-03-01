@@ -1,6 +1,7 @@
 package hu.esgott.CarMenu.leap;
 
 import hu.esgott.CarMenu.menu.MenuList;
+import hu.esgott.CarMenu.menu.StatusBar;
 
 import com.leapmotion.leap.Config;
 import com.leapmotion.leap.Controller;
@@ -15,6 +16,7 @@ import com.leapmotion.leap.Vector;
 public class LeapListener extends Listener {
 
 	private MenuList menuList;
+	private StatusBar statusBar;
 	private ExitTimer exitTimer;
 	private int previousSwipeGestureId;
 	private int frameUntilNextSwipe = 0;
@@ -23,9 +25,10 @@ public class LeapListener extends Listener {
 	private static final float MIN_SWIPE_LENGTH = 300.0f;
 	private static final float SPEED_LIMIT = 10.0f;
 
-	public LeapListener(MenuList menuList) {
+	public LeapListener(MenuList menuList, StatusBar statusBar) {
 		this.menuList = menuList;
-		exitTimer = new ExitTimer(menuList);
+		this.statusBar = statusBar;
+		exitTimer = new ExitTimer(menuList, statusBar);
 	}
 
 	@Override
@@ -36,6 +39,7 @@ public class LeapListener extends Listener {
 		if (config.setFloat("Gesture.Swipe.MinLength", MIN_SWIPE_LENGTH)) {
 			config.save();
 		}
+		statusBar.setLeapConnected(true);
 	}
 
 	@Override
@@ -97,6 +101,11 @@ public class LeapListener extends Listener {
 				exitTimer.notExitSituation();
 			}
 		}
+	}
+
+	@Override
+	public void onDisconnect(Controller arg0) {
+		statusBar.setLeapConnected(false);
 	}
 
 }
