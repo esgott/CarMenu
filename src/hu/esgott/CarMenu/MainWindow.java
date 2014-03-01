@@ -1,5 +1,6 @@
 package hu.esgott.CarMenu;
 
+import hu.esgott.CarMenu.leap.LeapListener;
 import hu.esgott.CarMenu.menu.MenuList;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -11,9 +12,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import com.leapmotion.leap.Controller;
+import com.leapmotion.leap.Listener;
+
 public class MainWindow extends Application {
 
 	private MenuList menuList = new MenuList();
+	private Controller leapController = new Controller();
+	private Listener leapListener = new LeapListener(menuList);
 
 	public static void main(String[] args) {
 		launch(args);
@@ -21,10 +27,15 @@ public class MainWindow extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		initializeLeap();
 		primaryStage.setTitle("CarMenu");
 		Scene scene = new Scene(createPane());
 		primaryStage.setScene(scene);
 		primaryStage.show();
+	}
+
+	private void initializeLeap() {
+		leapController.addListener(leapListener);
 	}
 
 	private Pane createPane() {
@@ -87,6 +98,11 @@ public class MainWindow extends Application {
 			}
 		});
 		return exitButton;
+	}
+
+	@Override
+	public void stop() throws Exception {
+		leapController.removeListener(leapListener);
 	}
 
 }
