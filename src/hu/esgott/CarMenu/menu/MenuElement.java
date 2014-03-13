@@ -15,4 +15,7 @@ public class MenuElement {
 		return name;
 	}
 
+	public void action() {
+	}
+
 }
