@@ -11,7 +11,7 @@ public class ExitTimer {
 
 	public ExitTimer(final MenuList menuList, final StatusBar statusBar) {
 
-		TimerTask timerTask = new TimerTask() {
+		Runnable task = new TimerTask() {
 			@Override
 			public void run() {
 				menuList.exit();
@@ -32,7 +32,7 @@ public class ExitTimer {
 			}
 		};
 
-		gestureTimer = new GestureTimer(1, 10, timerTask, onStart, onStop);
+		gestureTimer = new GestureTimer(1, 30, task, onStart, onStop);
 	}
 
 	public void exitSituation() {
@@ -41,6 +41,10 @@ public class ExitTimer {
 
 	public void notExitSituation() {
 		gestureTimer.stop();
+	}
+
+	public void dispose() {
+		gestureTimer.dispose();
 	}
 
 }

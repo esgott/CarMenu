@@ -14,14 +14,13 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import com.leapmotion.leap.Controller;
-import com.leapmotion.leap.Listener;
 
 public class MainWindow extends Application {
 
 	private MenuList menuList = new MenuList();
 	private StatusBar statusBar = new StatusBar();
 	private Controller leapController = new Controller();
-	private Listener leapListener = new LeapListener(menuList, statusBar);
+	private LeapListener leapListener = new LeapListener(menuList, statusBar);
 
 	public static void main(String[] args) {
 		launch(args);
@@ -105,6 +104,7 @@ public class MainWindow extends Application {
 
 	@Override
 	public void stop() throws Exception {
+		leapListener.dispose();
 		leapController.removeListener(leapListener);
 	}
 

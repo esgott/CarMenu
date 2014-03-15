@@ -10,24 +10,31 @@ public class GestureTimer {
 	private long timeUntilStart;
 	private Timer timer = new Timer();
 	private TimerTask timerTask;
+	private Runnable task;
 	private boolean running = false;
 	private Runnable onStart;
 	private Runnable onStop;
 
 	public GestureTimer(float secondsUntilStart, int frameUntilCancel,
-			TimerTask task, Runnable onStart, Runnable onStop) {
+			Runnable task, Runnable onStart, Runnable onStop) {
 		this.frameUntilCancel = frameUntilCancel;
 		frameLeft = frameUntilCancel;
 		timeUntilStart = Math.round(secondsUntilStart * 1000);
-		timerTask = task;
+		this.task = task;
 		this.onStart = onStart;
 		this.onStop = onStop;
 	}
 
 	public void start() {
 		if (!running) {
-			timer.schedule(timerTask, timeUntilStart);
 			running = true;
+			timerTask = new TimerTask() {
+				@Override
+				public void run() {
+					task.run();
+				}
+			};
+			timer.schedule(timerTask, timeUntilStart);
 			if (onStart != null) {
 				onStart.run();
 			}
@@ -43,9 +50,13 @@ public class GestureTimer {
 				onStop.run();
 			}
 		}
-		if (frameUntilCancel > 0) {
-			frameUntilCancel--;
+		if (frameLeft > 0) {
+			frameLeft--;
 		}
+	}
+
+	public void dispose() {
+		timer.cancel();
 	}
 
 }

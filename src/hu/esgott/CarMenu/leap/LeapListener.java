@@ -23,7 +23,7 @@ public class LeapListener extends Listener {
 	private boolean swipeProcessed;
 	private static final int MAX_SWYPE_FREQ = 10;
 	private static final float MIN_SWIPE_LENGTH = 300.0f;
-	private static final float SPEED_LIMIT = 10.0f;
+	private static final float SPEED_LIMIT = 20.0f;
 
 	public LeapListener(MenuList menuList, StatusBar statusBar) {
 		this.menuList = menuList;
@@ -91,21 +91,35 @@ public class LeapListener extends Listener {
 
 	private void checkIfExit(Frame frame) {
 		int handsCount = frame.hands().count();
-		int fingerCount = frame.fingers().count();
-		if ((handsCount == 1) && (fingerCount == 5)) {
+		if ((handsCount == 1)) {
 			Hand hand = frame.hands().get(0);
 			float speed = hand.palmVelocity().magnitude();
+			int fingerCount = frame.fingers().count();
 			if (speed < SPEED_LIMIT) {
-				exitTimer.exitSituation();
-			} else {
-				exitTimer.notExitSituation();
+				enableActionOnFingerNum(fingerCount);
+				return;
 			}
 		}
+		disableActions();
+	}
+
+	private void enableActionOnFingerNum(int fingerNum) {
+		if (fingerNum == 5) {
+			exitTimer.exitSituation();
+		}
+	}
+
+	private void disableActions() {
+		exitTimer.notExitSituation();
 	}
 
 	@Override
 	public void onDisconnect(Controller arg0) {
 		statusBar.setLeapConnected(false);
+	}
+
+	public void dispose() {
+		exitTimer.dispose();
 	}
 
 }
