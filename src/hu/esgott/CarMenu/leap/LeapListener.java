@@ -18,6 +18,7 @@ public class LeapListener extends Listener {
 	private MenuList menuList;
 	private StatusBar statusBar;
 	private ExitTimer exitTimer;
+	private SpeechTimer speechTimer;
 	private int previousSwipeGestureId;
 	private int frameUntilNextSwipe = 0;
 	private boolean swipeProcessed;
@@ -29,6 +30,7 @@ public class LeapListener extends Listener {
 		this.menuList = menuList;
 		this.statusBar = statusBar;
 		exitTimer = new ExitTimer(menuList, statusBar);
+		speechTimer = new SpeechTimer(statusBar);
 	}
 
 	@Override
@@ -104,13 +106,16 @@ public class LeapListener extends Listener {
 	}
 
 	private void enableActionOnFingerNum(int fingerNum) {
-		if (fingerNum == 5) {
+		if (fingerNum <= 1) {
+			speechTimer.recordGestureStarted();
+		} else if (fingerNum == 5) {
 			exitTimer.exitSituation();
 		}
 	}
 
 	private void disableActions() {
 		exitTimer.notExitSituation();
+		speechTimer.recordGestureFinished();
 	}
 
 	@Override
@@ -120,6 +125,7 @@ public class LeapListener extends Listener {
 
 	public void dispose() {
 		exitTimer.dispose();
+		speechTimer.dispose();
 	}
 
 }
