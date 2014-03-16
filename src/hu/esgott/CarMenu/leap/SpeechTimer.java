@@ -1,29 +1,33 @@
 package hu.esgott.CarMenu.leap;
 
 import hu.esgott.CarMenu.menu.StatusBar;
+import hu.esgott.CarMenu.sound.Recorder;
 
 public class SpeechTimer {
 
 	private GestureTimer gestureTimer;
+	private Recorder recorder = new Recorder();
 
 	public SpeechTimer(final StatusBar statusBar) {
 
 		Runnable task = new Runnable() {
 			@Override
 			public void run() {
+				statusBar.setRecordMode(true);
+				recorder.record();
 			}
 		};
 
 		Runnable onStart = new Runnable() {
 			@Override
 			public void run() {
-				statusBar.setRecordMode(true);
 			}
 		};
 
 		Runnable onStop = new Runnable() {
 			@Override
 			public void run() {
+				recorder.stop();
 				statusBar.setRecordMode(false);
 			}
 		};
@@ -41,6 +45,7 @@ public class SpeechTimer {
 
 	public void dispose() {
 		gestureTimer.dispose();
+		recorder.dispose();
 	}
 
 }
