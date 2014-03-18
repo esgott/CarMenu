@@ -3,6 +3,7 @@ package hu.esgott.CarMenu;
 import hu.esgott.CarMenu.leap.LeapListener;
 import hu.esgott.CarMenu.menu.MenuList;
 import hu.esgott.CarMenu.menu.StatusBar;
+import hu.esgott.CarMenu.sound.RecognizerServerConnection;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -53,8 +54,17 @@ public class MainWindow extends Application {
 		Button forwardButton = createForwardButton();
 		Button enterButton = createEnterButton();
 		Button exitButton = createExitButton();
+		Button connectButton = new Button("Connect");
+		connectButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				RecognizerServerConnection connection = new RecognizerServerConnection();
+				connection.trial();
+				connection.dispose();
+			}
+		});
 		buttonPane.getChildren().addAll(backButton, forwardButton, enterButton,
-				exitButton);
+				exitButton, connectButton);
 		return buttonPane;
 	}
 
