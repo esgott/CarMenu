@@ -11,7 +11,7 @@ public class RecognizerCommand {
 
 	public RecognizerCommand(ServerCommand serverCommand, String parameters) {
 		command = serverCommand.getCommand();
-		this.parameters = parameters;
+		this.parameters = " " + parameters;
 	}
 
 	public RecognizerCommand(ServerCommand serverCommand, ByteBuffer binaryData) {
@@ -23,7 +23,7 @@ public class RecognizerCommand {
 	public ByteBuffer getCommandLength() {
 		int length;
 		if (binaryData == null) {
-			length = command.length() + parameters.length() - 1;
+			length = command.length() + parameters.length();
 		} else {
 			length = 0; // TODO calculate length in this case
 		}

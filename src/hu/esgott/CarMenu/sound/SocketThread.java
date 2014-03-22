@@ -68,6 +68,7 @@ public class SocketThread implements Runnable {
 
 	private void connect() throws UnknownHostException, IOException {
 		socket = new Socket(ip, port);
+		socket.setSoTimeout(10000);
 		inputStream = new BufferedReader(new InputStreamReader(
 				socket.getInputStream()));
 		outputStream = new BufferedWriter(new OutputStreamWriter(
@@ -75,7 +76,7 @@ public class SocketThread implements Runnable {
 	}
 
 	private void sendNextCommand() throws IOException, InterruptedException {
-		RecognizerCommand command = queue.poll(100, TimeUnit.MILLISECONDS);
+		RecognizerCommand command = queue.poll(500, TimeUnit.MILLISECONDS);
 		if (command != null) {
 			System.out.println("start sending command");
 			ByteBuffer length = command.getCommandLength();
@@ -85,9 +86,8 @@ public class SocketThread implements Runnable {
 			String commandString = command.getCommandWithParameters();
 			outputStream.write(commandString);
 			outputStream.flush();
-			System.out.println("command sent");
+			System.out.println(commandString + " command sent");
 			receive();
-			System.out.println("response received");
 		} else {
 			System.out.println("no command in timeout");
 		}
@@ -98,7 +98,7 @@ public class SocketThread implements Runnable {
 		char[] response = new char[length];
 		inputStream.read(response);
 		menu.actionOnRecognizedString("");
-		System.out.println(response);
+		System.out.println(new String(response) + "received");
 	}
 
 	private int receiveSize() throws IOException {
