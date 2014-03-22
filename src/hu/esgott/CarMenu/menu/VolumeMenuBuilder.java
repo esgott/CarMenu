@@ -12,10 +12,10 @@ public class VolumeMenuBuilder implements MenuBuilder {
 	}
 
 	@Override
-	public ObservableList<MenuElement> build() {
+	public ObservableList<MenuElement> build(Menu caller) {
 		ObservableList<MenuElement> list = FXCollections.observableArrayList();
 		for (Integer i = 1; i <= 30; i++) {
-			list.add(new MenuElement(i.toString(), null));
+			list.add(new MenuElement(i.toString(), caller, null));
 		}
 		return list;
 	}

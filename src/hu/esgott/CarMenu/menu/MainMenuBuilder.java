@@ -14,10 +14,10 @@ public class MainMenuBuilder implements MenuBuilder {
 	}
 
 	@Override
-	public ObservableList<MenuElement> build() {
+	public ObservableList<MenuElement> build(Menu caller) {
 		ObservableList<MenuElement> list = FXCollections.observableArrayList();
-		list.add(new MenuElement("Szellőzés", ventilationMenu));
-		list.add(new MenuElement("Hangerő", volumeMenu));
+		list.add(new MenuElement("Szellőzés", caller, ventilationMenu));
+		list.add(new MenuElement("Hangerő", caller, volumeMenu));
 		return list;
 	}
 

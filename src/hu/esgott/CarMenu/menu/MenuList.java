@@ -1,6 +1,7 @@
 package hu.esgott.CarMenu.menu;
 
 import javafx.application.Platform;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionModel;
 
@@ -9,13 +10,15 @@ public class MenuList {
 	private ListView<MenuElement> listView = new ListView<>();
 	private SelectionModel<MenuElement> selectionModel = listView
 			.getSelectionModel();
+	private Label selectionLabel;
 	private Menu mainMenu = new Menu();
 	private Menu ventilationMenu = new Menu();
 	private Menu volumeMenu = new Menu();
 	private Menu currentMenu = mainMenu;
 
-	public MenuList() {
+	public MenuList(Label selectionLabel) {
 		createMenus();
+		this.selectionLabel = selectionLabel;
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -57,7 +60,7 @@ public class MenuList {
 	}
 
 	private void enterLowerMenu(MenuElement menuElement) {
-		final Menu selectedMenu = menuElement.next;
+		final Menu selectedMenu = menuElement.child;
 		if (selectedMenu != null) {
 			currentMenu.setPosition(selectionModel.getSelectedIndex());
 			currentMenu = selectedMenu;
@@ -65,9 +68,14 @@ public class MenuList {
 				@Override
 				public void run() {
 					listView.setItems(selectedMenu.getContent());
-					selectionModel.selectFirst();
+					int selectionIndex = currentMenu.getSelectedOptionIndex();
+					selectionModel.select(selectionIndex);
 				}
 			});
+		} else {
+			menuElement.action();
+			selectionLabel.setText(currentMenu.getSelectedOption().toString());
+			exit();
 		}
 	}
 

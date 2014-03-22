@@ -9,17 +9,20 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import com.leapmotion.leap.Controller;
 
 public class MainWindow extends Application {
 
-	private MenuList menuList = new MenuList();
 	private StatusBar statusBar = new StatusBar();
+	private Label selectionLabel = new Label();
+	private MenuList menuList = new MenuList(selectionLabel);
 	private Controller leapController = new Controller();
 	private LeapListener leapListener = new LeapListener(menuList, statusBar);
 
@@ -44,8 +47,15 @@ public class MainWindow extends Application {
 		BorderPane pane = new BorderPane();
 		pane.setTop(statusBar.getPanel());
 		pane.setCenter(menuList.getList());
-		pane.setBottom(createButtons());
+		pane.setBottom(createBottom());
 		return pane;
+	}
+
+	private Pane createBottom() {
+		VBox bottomPane = new VBox();
+		Pane buttonPane = createButtons();
+		bottomPane.getChildren().addAll(selectionLabel, buttonPane);
+		return bottomPane;
 	}
 
 	private Pane createButtons() {

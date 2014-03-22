@@ -12,12 +12,12 @@ public class VentilationMenuBuilder implements MenuBuilder {
 	}
 
 	@Override
-	public ObservableList<MenuElement> build() {
+	public ObservableList<MenuElement> build(Menu caller) {
 		ObservableList<MenuElement> list = FXCollections.observableArrayList();
-		list.add(new MenuElement("Kikapcsolva", null));
-		list.add(new MenuElement("Alacsony", null));
-		list.add(new MenuElement("Közepes", null));
-		list.add(new MenuElement("Magas", null));
+		list.add(new MenuElement("Kikapcsolva", caller, null));
+		list.add(new MenuElement("Alacsony", caller, null));
+		list.add(new MenuElement("Közepes", caller, null));
+		list.add(new MenuElement("Magas", caller, null));
 		return list;
 	}
 

@@ -4,7 +4,7 @@ import javafx.collections.ObservableList;
 
 interface MenuBuilder {
 
-	public ObservableList<MenuElement> build();
+	public ObservableList<MenuElement> build(Menu caller);
 
 	public Menu upper();
 

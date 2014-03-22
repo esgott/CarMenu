@@ -3,11 +3,13 @@ package hu.esgott.CarMenu.menu;
 public class MenuElement {
 
 	public String name;
-	public Menu next;
+	public Menu child;
+	public Menu parent;
 
-	public MenuElement(String name, Menu next) {
+	public MenuElement(String name, Menu parent, Menu child) {
 		this.name = name;
-		this.next = next;
+		this.child = child;
+		this.parent = parent;
 	}
 
 	@Override
@@ -16,6 +18,7 @@ public class MenuElement {
 	}
 
 	public void action() {
+		parent.select(this);
 	}
 
 }

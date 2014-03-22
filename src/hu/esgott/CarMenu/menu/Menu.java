@@ -5,11 +5,12 @@ import javafx.collections.ObservableList;
 public class Menu {
 
 	private ObservableList<MenuElement> menuElements;
+	private MenuElement selectedOption;
 	private Menu upper;
 	private int position;
 
 	public void fill(MenuBuilder builder) {
-		menuElements = builder.build();
+		menuElements = builder.build(this);
 		upper = builder.upper();
 	}
 
@@ -29,4 +30,19 @@ public class Menu {
 		return position;
 	}
 
+	public void select(MenuElement element) {
+		selectedOption = element;
+	}
+
+	public MenuElement getSelectedOption() {
+		return selectedOption;
+	}
+
+	public int getSelectedOptionIndex() {
+		if (selectedOption == null) {
+			return 0;
+		} else {
+			return menuElements.indexOf(selectedOption);
+		}
+	}
 }
