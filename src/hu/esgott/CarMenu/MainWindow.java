@@ -25,6 +25,7 @@ public class MainWindow extends Application {
 	private MenuList menuList = new MenuList(selectionLabel);
 	private Controller leapController = new Controller();
 	private LeapListener leapListener = new LeapListener(menuList, statusBar);
+	RecognizerServerConnection connection = new RecognizerServerConnection();
 
 	public static void main(String[] args) {
 		launch(args);
@@ -64,17 +65,8 @@ public class MainWindow extends Application {
 		Button forwardButton = createForwardButton();
 		Button enterButton = createEnterButton();
 		Button exitButton = createExitButton();
-		Button connectButton = new Button("Connect");
-		connectButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent arg0) {
-				RecognizerServerConnection connection = new RecognizerServerConnection();
-				connection.trial();
-				connection.dispose();
-			}
-		});
 		buttonPane.getChildren().addAll(backButton, forwardButton, enterButton,
-				exitButton, connectButton);
+				exitButton);
 		return buttonPane;
 	}
 
@@ -126,6 +118,7 @@ public class MainWindow extends Application {
 	public void stop() throws Exception {
 		leapListener.dispose();
 		leapController.removeListener(leapListener);
+		connection.dispose();
 	}
 
 }
