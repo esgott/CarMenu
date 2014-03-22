@@ -17,7 +17,7 @@ public class RecognizerServerConnection {
 	public void trial() {
 		RecognizerCommand command = new RecognizerCommand(
 				ServerCommand.LOAD_GRAMMAR,
-				"SRC=something.flx B_ACTIVATE=false");
+				"SRC=lex_sp_00138.flx B_ACTIVATE=false");
 		socketThread.sendCommand(command);
 	}
 
