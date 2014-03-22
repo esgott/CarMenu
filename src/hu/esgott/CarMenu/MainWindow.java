@@ -3,7 +3,6 @@ package hu.esgott.CarMenu;
 import hu.esgott.CarMenu.leap.LeapListener;
 import hu.esgott.CarMenu.menu.MenuList;
 import hu.esgott.CarMenu.menu.StatusBar;
-import hu.esgott.CarMenu.sound.RecognizerServerConnection;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -25,7 +24,6 @@ public class MainWindow extends Application {
 	private MenuList menuList = new MenuList(selectionLabel);
 	private Controller leapController = new Controller();
 	private LeapListener leapListener = new LeapListener(menuList, statusBar);
-	RecognizerServerConnection connection = new RecognizerServerConnection(menuList);
 
 	public static void main(String[] args) {
 		launch(args);
@@ -118,7 +116,6 @@ public class MainWindow extends Application {
 	public void stop() throws Exception {
 		leapListener.dispose();
 		leapController.removeListener(leapListener);
-		connection.dispose();
 	}
 
 }

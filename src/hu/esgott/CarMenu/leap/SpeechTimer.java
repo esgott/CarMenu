@@ -1,14 +1,17 @@
 package hu.esgott.CarMenu.leap;
 
 import hu.esgott.CarMenu.menu.StatusBar;
+import hu.esgott.CarMenu.sound.RecognizerServerConnection;
 import hu.esgott.CarMenu.sound.Recorder;
 
 public class SpeechTimer {
 
 	private GestureTimer gestureTimer;
-	private Recorder recorder = new Recorder();
+	private Recorder recorder;
 
-	public SpeechTimer(final StatusBar statusBar) {
+	public SpeechTimer(final StatusBar statusBar,
+			RecognizerServerConnection recognizerConnection) {
+		recorder = new Recorder(recognizerConnection);
 
 		Runnable task = new Runnable() {
 			@Override

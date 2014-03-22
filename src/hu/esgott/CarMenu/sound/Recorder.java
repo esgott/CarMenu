@@ -18,7 +18,7 @@ public class Recorder {
 	RecorderThread recorderThread;
 	Thread thread;
 
-	public Recorder() {
+	public Recorder(RecognizerServerConnection recognizerConnection) {
 		AudioFormat format = new AudioFormat(44100, 16, 1, true, false);
 		DataLine.Info inputInfo = new DataLine.Info(TargetDataLine.class,
 				format);
