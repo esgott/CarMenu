@@ -59,8 +59,15 @@ public class MenuList {
 		}
 	}
 
+	public void actionOnRecognizedString(String pattern) {
+		MenuElement matchingElement = currentMenu.menuForSpeech(pattern);
+		if (matchingElement != null) {
+			enterLowerMenu(matchingElement);
+		}
+	}
+
 	private void enterLowerMenu(MenuElement menuElement) {
-		final Menu selectedMenu = menuElement.child;
+		final Menu selectedMenu = menuElement.getChild();
 		if (selectedMenu != null) {
 			currentMenu.setPosition(selectionModel.getSelectedIndex());
 			currentMenu = selectedMenu;

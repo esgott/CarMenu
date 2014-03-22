@@ -45,4 +45,13 @@ public class Menu {
 			return menuElements.indexOf(selectedOption);
 		}
 	}
+
+	public MenuElement menuForSpeech(String pattern) {
+		for (MenuElement element : menuElements) {
+			if (element.matches(pattern)) {
+				return element;
+			}
+		}
+		return null;
+	}
 }

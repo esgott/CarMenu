@@ -25,7 +25,7 @@ public class MainWindow extends Application {
 	private MenuList menuList = new MenuList(selectionLabel);
 	private Controller leapController = new Controller();
 	private LeapListener leapListener = new LeapListener(menuList, statusBar);
-	RecognizerServerConnection connection = new RecognizerServerConnection();
+	RecognizerServerConnection connection = new RecognizerServerConnection(menuList);
 
 	public static void main(String[] args) {
 		launch(args);

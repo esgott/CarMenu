@@ -1,20 +1,23 @@
 package hu.esgott.CarMenu.sound;
 
+import hu.esgott.CarMenu.menu.MenuList;
 
 public class RecognizerServerConnection {
 
 	private SocketThread socketThread;
 	private Thread thread;
 
-	public RecognizerServerConnection() {
-		socketThread = new SocketThread("152.66.246.33", 2605);
+	public RecognizerServerConnection(MenuList menu) {
+		socketThread = new SocketThread("152.66.246.33", 2605, menu);
 		thread = new Thread(socketThread);
 		System.out.println("starting thread");
 		thread.start();
 	}
 
 	public void trial() {
-		RecognizerCommand command = new RecognizerCommand(ServerCommand.LOAD_GRAMMAR, "SRC=something.flx B_ACTIVATE=false");
+		RecognizerCommand command = new RecognizerCommand(
+				ServerCommand.LOAD_GRAMMAR,
+				"SRC=something.flx B_ACTIVATE=false");
 		socketThread.sendCommand(command);
 	}
 

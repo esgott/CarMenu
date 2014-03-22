@@ -1,5 +1,7 @@
 package hu.esgott.CarMenu.sound;
 
+import hu.esgott.CarMenu.menu.MenuList;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -20,11 +22,13 @@ public class SocketThread implements Runnable {
 	private Socket socket;
 	private BufferedReader inputStream;
 	private BufferedWriter outputStream;
+	private MenuList menu;
 	private boolean running = true;
 
-	public SocketThread(String serverIp, int serverPort) {
+	public SocketThread(String serverIp, int serverPort, MenuList menuList) {
 		ip = serverIp;
 		port = serverPort;
+		menu = menuList;
 	}
 
 	public void sendCommand(RecognizerCommand command) {
@@ -93,6 +97,7 @@ public class SocketThread implements Runnable {
 		int length = receiveSize();
 		char[] response = new char[length];
 		inputStream.read(response);
+		menu.actionOnRecognizedString("");
 		System.out.println(response);
 	}
 
