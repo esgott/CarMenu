@@ -11,6 +11,7 @@ public class MenuList {
 			.getSelectionModel();
 	private Menu mainMenu = new Menu();
 	private Menu ventilationMenu = new Menu();
+	private Menu volumeMenu = new Menu();
 	private Menu currentMenu = mainMenu;
 
 	public MenuList() {
@@ -25,8 +26,9 @@ public class MenuList {
 	}
 
 	private void createMenus() {
-		mainMenu.fill(new MainMenuBuilder(ventilationMenu));
+		mainMenu.fill(new MainMenuBuilder(ventilationMenu, volumeMenu));
 		ventilationMenu.fill(new VentilationMenuBuilder(mainMenu));
+		volumeMenu.fill(new VolumeMenuBuilder(mainMenu));
 	}
 
 	public void previous() {
