@@ -1,8 +1,8 @@
 package hu.esgott.CarMenu.leap;
 
+import hu.esgott.CarMenu.MainWindow;
 import hu.esgott.CarMenu.menu.MenuList;
 import hu.esgott.CarMenu.menu.StatusBar;
-import hu.esgott.CarMenu.sound.RecognizerServerConnection;
 
 import com.leapmotion.leap.Config;
 import com.leapmotion.leap.Controller;
@@ -18,7 +18,6 @@ public class LeapListener extends Listener {
 
 	private MenuList menuList;
 	private StatusBar statusBar;
-	RecognizerServerConnection recognizerConnection;
 	private ExitTimer exitTimer;
 	private SpeechTimer speechTimer;
 	private int previousSwipeGestureId;
@@ -28,12 +27,11 @@ public class LeapListener extends Listener {
 	private static final float MIN_SWIPE_LENGTH = 300.0f;
 	private static final float SPEED_LIMIT = 20.0f;
 
-	public LeapListener(MenuList menuList, StatusBar statusBar) {
-		this.menuList = menuList;
-		this.statusBar = statusBar;
-		recognizerConnection= new RecognizerServerConnection(menuList);
+	public LeapListener(MainWindow mainWindow) {
+		menuList = mainWindow.getMenuList();
+		statusBar = mainWindow.getStatusBar();
 		exitTimer = new ExitTimer(menuList, statusBar);
-		speechTimer = new SpeechTimer(statusBar, recognizerConnection);
+		speechTimer = new SpeechTimer(mainWindow.getRecorder());
 	}
 
 	@Override
@@ -129,7 +127,6 @@ public class LeapListener extends Listener {
 	public void dispose() {
 		exitTimer.dispose();
 		speechTimer.dispose();
-		recognizerConnection.dispose();
 	}
 
 }

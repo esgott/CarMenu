@@ -3,6 +3,8 @@ package hu.esgott.CarMenu;
 import hu.esgott.CarMenu.leap.LeapListener;
 import hu.esgott.CarMenu.menu.MenuList;
 import hu.esgott.CarMenu.menu.StatusBar;
+import hu.esgott.CarMenu.sound.RecognizerServerConnection;
+import hu.esgott.CarMenu.sound.Recorder;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,7 +25,10 @@ public class MainWindow extends Application {
 	private Label selectionLabel = new Label();
 	private MenuList menuList = new MenuList(selectionLabel);
 	private Controller leapController = new Controller();
-	private LeapListener leapListener = new LeapListener(menuList, statusBar);
+	private LeapListener leapListener = new LeapListener(this);
+	private RecognizerServerConnection recognizerConnection = new RecognizerServerConnection(
+			menuList);
+	private Recorder recorder = new Recorder(statusBar, recognizerConnection);
 
 	public static void main(String[] args) {
 		launch(args);
@@ -63,8 +68,9 @@ public class MainWindow extends Application {
 		Button forwardButton = createForwardButton();
 		Button enterButton = createEnterButton();
 		Button exitButton = createExitButton();
+		Button recordButton = createRecordButton();
 		buttonPane.getChildren().addAll(backButton, forwardButton, enterButton,
-				exitButton);
+				exitButton, recordButton);
 		return buttonPane;
 	}
 
@@ -112,9 +118,38 @@ public class MainWindow extends Application {
 		return exitButton;
 	}
 
+	public Button createRecordButton() {
+		Button recorderButton = new Button("Record");
+		recorderButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				if (recorder.running()) {
+					recorder.stop();
+				} else {
+					recorder.record();
+				}
+			}
+		});
+		return recorderButton;
+	}
+
+	public StatusBar getStatusBar() {
+		return statusBar;
+	}
+
+	public MenuList getMenuList() {
+		return menuList;
+	}
+
+	public Recorder getRecorder() {
+		return recorder;
+	}
+
 	@Override
 	public void stop() throws Exception {
 		leapListener.dispose();
+		recorder.dispose();
+		recognizerConnection.dispose();
 		leapController.removeListener(leapListener);
 	}
 

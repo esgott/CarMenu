@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -49,6 +50,7 @@ public class SocketThread implements Runnable {
 				System.out.println("waiting for command");
 				sendNextCommand();
 			}
+			System.out.println("stopped");
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -58,6 +60,7 @@ public class SocketThread implements Runnable {
 		} finally {
 			if (socket != null) {
 				try {
+					System.out.println("closing socket");
 					socket.close();
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -68,7 +71,7 @@ public class SocketThread implements Runnable {
 
 	private void connect() throws UnknownHostException, IOException {
 		socket = new Socket(ip, port);
-		socket.setSoTimeout(10000);
+		socket.setSoTimeout(5000);
 		inputStream = new BufferedReader(new InputStreamReader(
 				socket.getInputStream()));
 		outputStream = new BufferedWriter(new OutputStreamWriter(
@@ -83,22 +86,50 @@ public class SocketThread implements Runnable {
 			for (int i = 0; i < 4; i++) {
 				outputStream.write(length.get(i));
 			}
-			String commandString = command.getCommandWithParameters();
-			outputStream.write(commandString);
-			outputStream.flush();
-			System.out.println(commandString + " command sent");
+			if (command.binary()) {
+				sendTextData(command.getCommand());
+				sendBinaryData(command.getBinaryData());
+			} else {
+				sendTextData(command.getCommandWithParameters());
+			}
 			receive();
-		} else {
-			System.out.println("no command in timeout");
 		}
+	}
+
+	private void sendTextData(String text) throws IOException {
+		outputStream.write(text);
+		outputStream.flush();
+		System.out.println(text + " command sent");
+	}
+
+	private void sendBinaryData(ByteBuffer buffer) throws IOException {
+		for (int i = 0; i < buffer.capacity(); i++) {
+			outputStream.write(buffer.get(i));
+		}
+		outputStream.flush();
+		System.out.println("binary data sent");
 	}
 
 	private void receive() throws IOException {
 		int length = receiveSize();
+		System.out.println("receiving " + length + " bytes of data");
 		char[] response = new char[length];
-		inputStream.read(response);
+		int read = 0;
+		while (running && read == 0) {
+			try {
+				read = inputStream.read(response);
+			} catch (SocketTimeoutException e) {
+				System.out.println("receive timed out");
+			}
+		}
+		String responseString = new String(response);
+		if (responseString.contains("vit_end=1")) {
+			RecognizerCommand traceBackCommand = new RecognizerCommand(
+					ServerCommand.TRACEBACK, "");
+			sendCommand(traceBackCommand);
+		}
 		menu.actionOnRecognizedString("");
-		System.out.println(new String(response) + "received");
+		System.out.println(responseString + "received");
 	}
 
 	private int receiveSize() throws IOException {
@@ -112,6 +143,7 @@ public class SocketThread implements Runnable {
 	}
 
 	public void stop() {
+		System.out.println("stopping");
 		running = false;
 	}
 

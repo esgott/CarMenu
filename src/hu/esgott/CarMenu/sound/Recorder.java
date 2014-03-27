@@ -1,5 +1,7 @@
 package hu.esgott.CarMenu.sound;
 
+import hu.esgott.CarMenu.menu.StatusBar;
+
 import java.io.ByteArrayOutputStream;
 
 import javax.sound.sampled.AudioFormat;
@@ -11,14 +13,18 @@ import javax.sound.sampled.TargetDataLine;
 
 public class Recorder {
 
+	private StatusBar statusBar;
+	private RecognizerServerConnection recognizerConnection;
 	private TargetDataLine inputLine;
 	private SourceDataLine outputLine;
-	private byte[] buffer;
 	private ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 	RecorderThread recorderThread;
 	Thread thread;
 
-	public Recorder(RecognizerServerConnection recognizerConnection) {
+	public Recorder(StatusBar statusBar,
+			RecognizerServerConnection recognizerConnection) {
+		this.statusBar = statusBar;
+		this.recognizerConnection = recognizerConnection;
 		AudioFormat format = new AudioFormat(44100, 16, 1, true, false);
 		DataLine.Info inputInfo = new DataLine.Info(TargetDataLine.class,
 				format);
@@ -36,19 +42,21 @@ public class Recorder {
 			outputLine = (SourceDataLine) AudioSystem.getLine(outputInfo);
 			outputLine.open();
 			outputLine.start();
-			buffer = new byte[inputLine.getBufferSize() / 5];
 		} catch (LineUnavailableException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void record() {
-		recorderThread = new RecorderThread(inputLine, buffer, outputStream);
+		statusBar.setRecordMode(true);
+		outputStream.reset();
+		recorderThread = new RecorderThread(inputLine, outputStream,
+				recognizerConnection);
 		thread = new Thread(recorderThread);
 		thread.start();
 	}
 
-	public void stop() {
+	public synchronized void stop() {
 		if (recorderThread != null) {
 			recorderThread.stop();
 			try {
@@ -62,7 +70,19 @@ public class Recorder {
 				e.printStackTrace();
 			}
 			recorderThread = null;
+			sendQuery();
 		}
+		statusBar.setRecordMode(false);
+	}
+
+	private void sendQuery() {
+		RecognizerCommand command = new RecognizerCommand(ServerCommand.QUERY,
+				"");
+		recognizerConnection.send(command);
+	}
+
+	public boolean running() {
+		return recorderThread != null;
 	}
 
 	public void dispose() {

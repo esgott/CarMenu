@@ -17,6 +17,7 @@ public class RecognizerCommand {
 	public RecognizerCommand(ServerCommand serverCommand, ByteBuffer binaryData) {
 		this(serverCommand, "");
 		binaryData.order(ByteOrder.LITTLE_ENDIAN);
+		binaryData.rewind();
 		this.binaryData = binaryData;
 	}
 
@@ -25,7 +26,8 @@ public class RecognizerCommand {
 		if (binaryData == null) {
 			length = command.length() + parameters.length();
 		} else {
-			length = 0; // TODO calculate length in this case
+			length = command.length() + binaryData.capacity();
+			System.out.println("capacoty: " + binaryData.capacity());
 		}
 		ByteBuffer lengthBytes = ByteBuffer.allocate(4);
 		lengthBytes.order(ByteOrder.LITTLE_ENDIAN);
@@ -33,8 +35,20 @@ public class RecognizerCommand {
 		return lengthBytes;
 	}
 
+	public boolean binary() {
+		return binaryData != null;
+	}
+
+	public String getCommand() {
+		return command;
+	}
+
 	public String getCommandWithParameters() {
 		return command + parameters;
+	}
+
+	public ByteBuffer getBinaryData() {
+		return binaryData;
 	}
 
 }
