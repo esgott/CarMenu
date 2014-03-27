@@ -84,7 +84,7 @@ public class LeapListener extends Listener {
 			if (direction.getX() > 0) {
 				menuList.next();
 			} else {
-				menuList.previous();
+				menuList.next();
 			}
 			previousSwipeGestureId = swipeGesture.id();
 			swipeProcessed = true;
