@@ -7,10 +7,13 @@ public class MainMenuBuilder implements MenuBuilder {
 
 	private Menu ventilationMenu;
 	private Menu volumeMenu;
+	private Menu settingsMenu;
 
-	public MainMenuBuilder(Menu ventilationMenu, Menu volumeMenu) {
+	public MainMenuBuilder(Menu ventilationMenu, Menu volumeMenu,
+			Menu settingsMenu) {
 		this.ventilationMenu = ventilationMenu;
 		this.volumeMenu = volumeMenu;
+		this.settingsMenu = settingsMenu;
 	}
 
 	@Override
@@ -18,6 +21,7 @@ public class MainMenuBuilder implements MenuBuilder {
 		ObservableList<MenuElement> list = FXCollections.observableArrayList();
 		list.add(new MenuElement("Szellőzés", caller, ventilationMenu));
 		list.add(new MenuElement("Hangerő", caller, volumeMenu));
+		list.add(new MenuElement("Beállítások", caller, settingsMenu));
 		return list;
 	}
 

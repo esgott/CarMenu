@@ -14,6 +14,8 @@ public class MenuList {
 	private Menu mainMenu = new Menu();
 	private Menu ventilationMenu = new Menu();
 	private Menu volumeMenu = new Menu();
+	private Menu settingsMenu = new Menu();
+	private Menu parkingRadarMenu = new Menu();
 	private Menu currentMenu = mainMenu;
 
 	public MenuList(Label selectionLabel) {
@@ -29,9 +31,12 @@ public class MenuList {
 	}
 
 	private void createMenus() {
-		mainMenu.fill(new MainMenuBuilder(ventilationMenu, volumeMenu));
+		mainMenu.fill(new MainMenuBuilder(ventilationMenu, volumeMenu,
+				settingsMenu));
 		ventilationMenu.fill(new VentilationMenuBuilder(mainMenu));
 		volumeMenu.fill(new VolumeMenuBuilder(mainMenu));
+		settingsMenu.fill(new SettingsMenuBuilder(mainMenu, parkingRadarMenu));
+		parkingRadarMenu.fill(new ParkingRadarMenuBuilder(settingsMenu));
 	}
 
 	public void previous() {
