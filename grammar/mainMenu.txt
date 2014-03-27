@@ -1,4 +1,11 @@
-szellozes szellözés
-hangero hangerö
-elozo elözö
-kovetkezo következö
+szellozes	szellözés
+hangero	hangerö
+kikapcsolva	kikapcsolva
+alacsony	alacsony
+kozepes közepes
+magas	magas
+parkoloradar	parkolóradar
+ki	ki
+be	be
+elozo	elözö
+kovetkezo	következö
