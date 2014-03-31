@@ -13,9 +13,9 @@ import com.leapmotion.leap.Controller;
 
 public class MainWindow extends Application {
 
-	private MainWindowScene windowScene = new MainWindowScene(this);
+	private MainWindowScene windowScene;
 	private Controller leapController = new Controller();
-	private LeapListener leapListener = new LeapListener(this);
+	private LeapListener leapListener;
 	private RecognizerServerConnection recognizerConnection;
 	private Recorder recorder;
 
@@ -25,6 +25,7 @@ public class MainWindow extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		windowScene = new MainWindowScene(this);
 		initializeLeap();
 		primaryStage.setTitle("CarMenu");
 		Scene scene = windowScene.getScene();
@@ -34,6 +35,7 @@ public class MainWindow extends Application {
 	}
 
 	private void initializeLeap() {
+		leapListener = new LeapListener(this);
 		leapController.addListener(leapListener);
 	}
 
