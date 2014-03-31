@@ -40,10 +40,9 @@ public class MainWindow extends Application {
 	}
 
 	private void createRecognizerClasses() {
-		recognizerConnection = new RecognizerServerConnection(
-				windowScene.getMenuList());
+		recognizerConnection = new RecognizerServerConnection();
 		recorder = new Recorder(windowScene.getStatusBar(),
-				recognizerConnection);
+				windowScene.getMenuList(), recognizerConnection);
 	}
 
 	public StatusBar getStatusBar() {

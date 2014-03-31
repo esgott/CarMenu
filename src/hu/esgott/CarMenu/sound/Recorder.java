@@ -1,5 +1,6 @@
 package hu.esgott.CarMenu.sound;
 
+import hu.esgott.CarMenu.menu.MenuList;
 import hu.esgott.CarMenu.menu.StatusBar;
 
 import java.io.ByteArrayOutputStream;
@@ -14,6 +15,7 @@ import javax.sound.sampled.TargetDataLine;
 public class Recorder {
 
 	private StatusBar statusBar;
+	private MenuList menu;
 	private RecognizerServerConnection recognizerConnection;
 	private TargetDataLine inputLine;
 	private SourceDataLine outputLine;
@@ -21,9 +23,10 @@ public class Recorder {
 	RecorderThread recorderThread;
 	Thread thread;
 
-	public Recorder(StatusBar statusBar,
+	public Recorder(StatusBar statusBar, MenuList menuList,
 			RecognizerServerConnection recognizerConnection) {
 		this.statusBar = statusBar;
+		menu = menuList;
 		this.recognizerConnection = recognizerConnection;
 		AudioFormat format = new AudioFormat(44100, 16, 1, true, false);
 		DataLine.Info inputInfo = new DataLine.Info(TargetDataLine.class,
@@ -78,6 +81,17 @@ public class Recorder {
 	private void sendQuery() {
 		RecognizerCommand command = new RecognizerCommand(ServerCommand.QUERY,
 				"", true);
+		command.setCallback(new ResponseCallback() {
+			@Override
+			public void call(String response) {
+				if (response.contains("vit_end=1")) {
+					RecognizerCommand traceBackCommand = new RecognizerCommand(
+							ServerCommand.TRACEBACK, "", true);
+					recognizerConnection.send(traceBackCommand);
+					menu.actionOnRecognizedString("");
+				}
+			}
+		});
 		recognizerConnection.send(command);
 	}
 
