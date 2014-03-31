@@ -1,38 +1,31 @@
 package hu.esgott.CarMenu.sound;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 public class RecognizerCommand {
 
 	private String command;
 	private String parameters;
 	private ByteBuffer binaryData;
+	private boolean waitForResponse;
+	private ResponseCallback callback;
 
-	public RecognizerCommand(ServerCommand serverCommand, String parameters) {
+	public RecognizerCommand(ServerCommand serverCommand, String parameters,
+			boolean waitForResponse) {
 		command = serverCommand.getCommand();
 		this.parameters = " " + parameters;
+		this.waitForResponse = waitForResponse;
 	}
 
-	public RecognizerCommand(ServerCommand serverCommand, ByteBuffer binaryData) {
-		this(serverCommand, "");
-		binaryData.order(ByteOrder.LITTLE_ENDIAN);
-		binaryData.rewind();
+	public RecognizerCommand(ServerCommand serverCommand,
+			ByteBuffer binaryData, boolean waitForResponse) {
+		this(serverCommand, "", waitForResponse);
+		binaryData.flip();
 		this.binaryData = binaryData;
 	}
 
-	public ByteBuffer getCommandLength() {
-		int length;
-		if (binaryData == null) {
-			length = command.length() + parameters.length();
-		} else {
-			length = command.length() + binaryData.capacity();
-			System.out.println("capacoty: " + binaryData.capacity());
-		}
-		ByteBuffer lengthBytes = ByteBuffer.allocate(4);
-		lengthBytes.order(ByteOrder.LITTLE_ENDIAN);
-		lengthBytes.putInt(length);
-		return lengthBytes;
+	public void setCallback(ResponseCallback callback) {
+		this.callback = callback;
 	}
 
 	public boolean binary() {
@@ -49,6 +42,16 @@ public class RecognizerCommand {
 
 	public ByteBuffer getBinaryData() {
 		return binaryData;
+	}
+
+	public boolean waitForResponse() {
+		return waitForResponse;
+	}
+
+	public void call(String response) {
+		if (callback != null) {
+			callback.call(response);
+		}
 	}
 
 }

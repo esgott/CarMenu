@@ -18,12 +18,13 @@ public class RecognizerServerConnection {
 	private void connect() {
 		socketThread.sendCommand(new RecognizerCommand(
 				ServerCommand.LOAD_GRAMMAR,
-				"SRC=lex_sp_00139.flx B_ACTIVATE=false"));
+				"SRC=lex_sp_00139.flx B_ACTIVATE=false", true));
 		socketThread.sendCommand(new RecognizerCommand(
-				ServerCommand.DEACTIVATE_GRAMMAR, "ID=ID_ALL_GRAMMARS"));
+				ServerCommand.DEACTIVATE_GRAMMAR, "ID=ID_ALL_GRAMMARS", true));
 		socketThread.sendCommand(new RecognizerCommand(
-				ServerCommand.ACTIVATE_GRAMMAR, "ID=lex_sp_00139.flx"));
-		socketThread.sendCommand(new RecognizerCommand(ServerCommand.INIT, ""));
+				ServerCommand.ACTIVATE_GRAMMAR, "ID=lex_sp_00139.flx", true));
+		socketThread.sendCommand(new RecognizerCommand(ServerCommand.INIT, "",
+				true));
 	}
 
 	public void send(RecognizerCommand command) {

@@ -77,7 +77,7 @@ public class Recorder {
 
 	private void sendQuery() {
 		RecognizerCommand command = new RecognizerCommand(ServerCommand.QUERY,
-				"");
+				"", true);
 		recognizerConnection.send(command);
 	}
 

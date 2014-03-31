@@ -7,7 +7,7 @@ import javax.sound.sampled.TargetDataLine;
 
 public class RecorderThread implements Runnable {
 
-	private static final int BUFFER_SIZE = 512;
+	private static final int BUFFER_SIZE = 1024;
 	private TargetDataLine line;
 	private byte[] buffer = new byte[BUFFER_SIZE];
 	private ByteArrayOutputStream outputStream;
@@ -41,7 +41,7 @@ public class RecorderThread implements Runnable {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(BUFFER_SIZE);
 		byteBuffer.put(buffer);
 		RecognizerCommand command = new RecognizerCommand(ServerCommand.WAVEIN,
-				byteBuffer);
+				byteBuffer, false);
 		recognizerConnection.send(command);
 	}
 
