@@ -37,11 +37,9 @@ public class SocketThread implements Runnable {
 	@Override
 	public void run() {
 		try {
-			System.out.println("thread started, connceting...");
 			connect();
 			System.out.println("connected");
 			while (running) {
-				System.out.println("waiting for command");
 				sendNextCommand();
 			}
 			System.out.println("stopped");
@@ -67,6 +65,7 @@ public class SocketThread implements Runnable {
 	}
 
 	private void sendNextCommand() throws IOException, InterruptedException {
+		System.out.println("queue size: " + queue.size());
 		RecognizerCommand command = queue.poll(500, TimeUnit.MILLISECONDS);
 		if (command != null) {
 			System.out.println("start sending command");
@@ -106,15 +105,11 @@ public class SocketThread implements Runnable {
 
 	private void sendBinaryData(ByteBuffer buffer) throws IOException {
 		sendSize(buffer.limit() / 2);
-		int i;
-		for (i = 0; i < buffer.limit(); i++) {
+		for (int i = 0; i < buffer.limit(); i++) {
 			outputStream.write(buffer.get(i));
-			System.out.print(String.format("%02x ", buffer.get(i)));
 		}
-		System.out.println();
 		outputStream.flush();
-		System.out.println(buffer.limit() + " binary data sent "
-				+ buffer.capacity() + " " + i);
+		System.out.println(buffer.limit() + " binary data sent ");
 	}
 
 	private void receive(RecognizerCommand command) throws IOException {
