@@ -54,7 +54,7 @@ public class Recorder {
 		statusBar.setRecordMode(true);
 		outputStream.reset();
 		recorderThread = new RecorderThread(inputLine, outputStream,
-				recognizerConnection);
+				recognizerConnection, this);
 		thread = new Thread(recorderThread);
 		thread.start();
 	}
@@ -73,26 +73,13 @@ public class Recorder {
 				e.printStackTrace();
 			}
 			recorderThread = null;
-			sendQuery();
 		}
 		statusBar.setRecordMode(false);
 	}
 
-	private void sendQuery() {
-		RecognizerCommand command = new RecognizerCommand(ServerCommand.QUERY,
-				"", true);
-		command.setCallback(new ResponseCallback() {
-			@Override
-			public void call(String response) {
-				if (response.contains("vit_end=1")) {
-					RecognizerCommand traceBackCommand = new RecognizerCommand(
-							ServerCommand.TRACEBACK, "", true);
-					recognizerConnection.send(traceBackCommand);
-					menu.actionOnRecognizedString("");
-				}
-			}
-		});
-		recognizerConnection.send(command);
+	public void matchFound() {
+		stop();
+		menu.actionOnRecognizedString("");
 	}
 
 	public boolean running() {
