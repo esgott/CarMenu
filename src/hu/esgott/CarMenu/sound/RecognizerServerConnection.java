@@ -1,8 +1,8 @@
 package hu.esgott.CarMenu.sound;
 
-
 public class RecognizerServerConnection {
 
+	private final static String GRAMMAR_FILE = "lex_sp_00138.flx";
 	private SocketThread socketThread;
 	private Thread thread;
 
@@ -15,13 +15,15 @@ public class RecognizerServerConnection {
 	}
 
 	private void connect() {
+		String loadParameters = "SRC=" + GRAMMAR_FILE + " B_ACTIVATE=false";
+		String deactivateParameters = "ID=ID_ALL_GRAMMARS";
+		String activateParameters = "ID=" + GRAMMAR_FILE;
 		socketThread.sendCommand(new RecognizerCommand(
-				ServerCommand.LOAD_GRAMMAR,
-				"SRC=lex_sp_00139.flx B_ACTIVATE=false", true));
+				ServerCommand.LOAD_GRAMMAR, loadParameters, true));
 		socketThread.sendCommand(new RecognizerCommand(
-				ServerCommand.DEACTIVATE_GRAMMAR, "ID=ID_ALL_GRAMMARS", true));
+				ServerCommand.DEACTIVATE_GRAMMAR, deactivateParameters, true));
 		socketThread.sendCommand(new RecognizerCommand(
-				ServerCommand.ACTIVATE_GRAMMAR, "ID=lex_sp_00139.flx", true));
+				ServerCommand.ACTIVATE_GRAMMAR, activateParameters, true));
 		socketThread.sendCommand(new RecognizerCommand(ServerCommand.INIT, "",
 				true));
 	}
