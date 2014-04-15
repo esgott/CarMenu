@@ -28,7 +28,7 @@ public class Recorder {
 		this.statusBar = statusBar;
 		menu = menuList;
 		this.recognizerConnection = recognizerConnection;
-		AudioFormat format = new AudioFormat(16000, 16, 1, true, false);
+		AudioFormat format = new AudioFormat(8000, 16, 1, true, false);
 		DataLine.Info inputInfo = new DataLine.Info(TargetDataLine.class,
 				format);
 		DataLine.Info outputInfo = new DataLine.Info(SourceDataLine.class,
