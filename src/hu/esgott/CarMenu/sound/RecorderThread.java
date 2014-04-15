@@ -8,12 +8,14 @@ import javax.sound.sampled.TargetDataLine;
 public class RecorderThread implements Runnable {
 
 	private static final int BUFFER_SIZE = 1024;
+	private static final int QUERY_FREQUENCY = 4;
 	private TargetDataLine line;
 	private byte[] buffer = new byte[BUFFER_SIZE];
 	private ByteArrayOutputStream outputStream;
 	private RecognizerServerConnection recognizerConnection;
 	private Recorder parent;
 	private boolean stopped = false;
+	private int leftUntilQuery = QUERY_FREQUENCY;
 
 	public RecorderThread(TargetDataLine line,
 			ByteArrayOutputStream outputStream,
@@ -32,7 +34,7 @@ public class RecorderThread implements Runnable {
 		while (!stopped) {
 			int numBytesRead = line.read(buffer, 0, buffer.length);
 			sendRecordedData();
-			sendQuery();
+			sendIfExpired();
 			outputStream.write(buffer, 0, numBytesRead);
 		}
 
@@ -46,6 +48,14 @@ public class RecorderThread implements Runnable {
 		RecognizerCommand command = new RecognizerCommand(ServerCommand.WAVEIN,
 				byteBuffer, false);
 		recognizerConnection.send(command);
+	}
+
+	private void sendIfExpired() {
+		if (leftUntilQuery <= 0) {
+			sendQuery();
+			leftUntilQuery = QUERY_FREQUENCY;
+		}
+		leftUntilQuery--;
 	}
 
 	private void sendQuery() {
