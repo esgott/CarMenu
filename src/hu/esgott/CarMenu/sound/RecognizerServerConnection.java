@@ -32,6 +32,10 @@ public class RecognizerServerConnection {
 		socketThread.sendCommand(command);
 	}
 
+	public void emptyQueue() {
+		socketThread.emptyQueue();
+	}
+
 	public void dispose() {
 		socketThread.stop();
 		try {

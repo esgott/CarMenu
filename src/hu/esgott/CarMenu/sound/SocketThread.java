@@ -149,6 +149,10 @@ public class SocketThread implements Runnable {
 		return new String(response);
 	}
 
+	public void emptyQueue() {
+		queue.clear();
+	}
+
 	public void stop() {
 		System.out.println("stopping");
 		running = false;

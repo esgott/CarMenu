@@ -55,6 +55,8 @@ public class RecorderThread implements Runnable {
 			@Override
 			public void call(String response) {
 				if (response.contains("vit_end=1")) {
+					System.out.println("!!!!!!!!!!!MATCH!!!!!!!!!!!!");
+					recognizerConnection.emptyQueue();
 					RecognizerCommand traceBackCommand = new RecognizerCommand(
 							ServerCommand.TRACEBACK, "", true);
 					recognizerConnection.send(traceBackCommand);
