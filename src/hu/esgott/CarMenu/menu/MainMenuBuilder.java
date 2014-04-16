@@ -19,8 +19,8 @@ public class MainMenuBuilder implements MenuBuilder {
 	@Override
 	public ObservableList<MenuElement> build(Menu caller) {
 		ObservableList<MenuElement> list = FXCollections.observableArrayList();
-		list.add(new MenuElement("Szellőzés", caller, ventilationMenu));
-		list.add(new MenuElement("Hangerő", caller, volumeMenu));
+		list.add(new MenuElement("Szellőzés", caller, ventilationMenu, "szellozes"));
+		list.add(new MenuElement("Hangerő", caller, volumeMenu, "hangero"));
 		list.add(new MenuElement("Beállítások", caller, settingsMenu));
 		return list;
 	}

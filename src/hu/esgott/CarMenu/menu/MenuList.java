@@ -65,9 +65,19 @@ public class MenuList {
 	}
 
 	public void actionOnRecognizedString(String pattern) {
-		MenuElement matchingElement = currentMenu.menuForSpeech(pattern);
-		if (matchingElement != null) {
-			enterLowerMenu(matchingElement);
+		System.out.println("Searching action for pattern: " + pattern);
+		switch (pattern) {
+		case "elozo":
+			previous();
+			break;
+		case "kovetkezo":
+			next();
+			break;
+		default:
+			MenuElement matchingElement = currentMenu.menuForSpeech(pattern);
+			if (matchingElement != null) {
+				enterLowerMenu(matchingElement);
+			}
 		}
 	}
 
