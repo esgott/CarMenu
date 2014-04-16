@@ -77,9 +77,8 @@ public class Recorder {
 		statusBar.setRecordMode(false);
 	}
 
-	public void matchFound() {
-		stop();
-		menu.actionOnRecognizedString("");
+	public void matchFound(String matchedString) {
+		menu.actionOnRecognizedString(matchedString);
 	}
 
 	public boolean running() {

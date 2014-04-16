@@ -65,19 +65,36 @@ public class RecorderThread implements Runnable {
 			@Override
 			public void call(String response) {
 				if (response.contains("vit_end=1")) {
-					System.out.println("!!!!!!!!!!!MATCH!!!!!!!!!!!!");
+					stop();
 					recognizerConnection.emptyQueue();
 					RecognizerCommand traceBackCommand = new RecognizerCommand(
 							ServerCommand.TRACEBACK, "", true);
+					traceBackCommand.setCallback(new ResponseCallback() {
+						@Override
+						public void call(String response) {
+							parseServerResponse(response);
+						}
+					});
 					recognizerConnection.send(traceBackCommand);
-					parent.matchFound();
 				}
 			}
 		});
 		recognizerConnection.send(command);
 	}
 
-	public void stop() {
+	private void parseServerResponse(String response) {
+		char[] splitterChar = new char[1];
+		splitterChar[0] = 9;
+		String splitterString = new String(splitterChar);
+		String[] lines = response.split(splitterString);
+		System.out.println("LINES:");
+		for (String line : lines) {
+			System.out.println(line);
+		}
+		parent.matchFound(lines[5]);
+	}
+
+	public synchronized void stop() {
 		stopped = true;
 	}
 
