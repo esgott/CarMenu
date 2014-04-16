@@ -65,7 +65,6 @@ public class SocketThread implements Runnable {
 	}
 
 	private void sendNextCommand() throws IOException, InterruptedException {
-		System.out.println("queue size: " + queue.size());
 		RecognizerCommand command = queue.poll(500, TimeUnit.MILLISECONDS);
 		if (command != null) {
 			System.out.println("start sending command");
