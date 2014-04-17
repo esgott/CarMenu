@@ -34,7 +34,7 @@ public class RecorderThread implements Runnable {
 		while (!stopped) {
 			int numBytesRead = line.read(buffer, 0, buffer.length);
 			sendRecordedData();
-			sendIfExpired();
+			sendIfQueryExpired();
 			outputStream.write(buffer, 0, numBytesRead);
 		}
 
@@ -50,7 +50,7 @@ public class RecorderThread implements Runnable {
 		recognizerConnection.send(command);
 	}
 
-	private void sendIfExpired() {
+	private void sendIfQueryExpired() {
 		if (leftUntilQuery <= 0) {
 			sendQuery();
 			leftUntilQuery = QUERY_FREQUENCY;
