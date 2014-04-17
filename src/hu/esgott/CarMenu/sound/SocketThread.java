@@ -38,11 +38,10 @@ public class SocketThread implements Runnable {
 	public void run() {
 		try {
 			connect();
-			System.out.println("connected");
 			while (running) {
 				sendNextCommand();
 			}
-			System.out.println("stopped");
+			System.out.println("socket thread stopped");
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		} finally {
@@ -62,6 +61,7 @@ public class SocketThread implements Runnable {
 		socket.setSoTimeout(5000);
 		inputStream = new BufferedInputStream(socket.getInputStream());
 		outputStream = new BufferedOutputStream(socket.getOutputStream());
+		System.out.println("connected");
 	}
 
 	private void sendNextCommand() throws IOException, InterruptedException {
@@ -153,7 +153,7 @@ public class SocketThread implements Runnable {
 	}
 
 	public void stop() {
-		System.out.println("stopping");
+		System.out.println("stopping socket thread");
 		running = false;
 	}
 
