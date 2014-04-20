@@ -1,5 +1,7 @@
 package hu.esgott.CarMenu.menu;
 
+import java.awt.Toolkit;
+
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -40,6 +42,7 @@ public class MenuList {
 	}
 
 	public void previous() {
+		beep();
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -48,7 +51,12 @@ public class MenuList {
 		});
 	}
 
+	private void beep() {
+		Toolkit.getDefaultToolkit().beep();
+	}
+
 	public void next() {
+		beep();
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -58,6 +66,7 @@ public class MenuList {
 	}
 
 	public void enter() {
+		beep();
 		MenuElement menuElement = selectionModel.getSelectedItem();
 		if (menuElement != null) {
 			enterLowerMenu(menuElement);
@@ -108,6 +117,7 @@ public class MenuList {
 	}
 
 	public void exit() {
+		beep();
 		final Menu upperMenu = currentMenu.getParentMenu();
 		if (upperMenu != null) {
 			Platform.runLater(new Runnable() {
