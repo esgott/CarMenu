@@ -96,7 +96,13 @@ public class MenuList {
 			});
 		} else {
 			menuElement.action();
-			selectionLabel.setText(currentMenu.getSelectedOption().toString());
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					selectionLabel.setText(currentMenu.getSelectedOption()
+							.toString());
+				}
+			});
 			exit();
 		}
 	}
