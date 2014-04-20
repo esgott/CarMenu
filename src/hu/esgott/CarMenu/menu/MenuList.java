@@ -46,13 +46,13 @@ public class MenuList {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				selectionModel.selectPrevious();
+				if (selectionModel.getSelectedIndex() != 0) {
+					selectionModel.selectPrevious();
+				} else {
+					selectionModel.selectLast();
+				}
 			}
 		});
-	}
-
-	private void beep() {
-		Toolkit.getDefaultToolkit().beep();
 	}
 
 	public void next() {
@@ -60,7 +60,12 @@ public class MenuList {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				selectionModel.selectNext();
+				if (selectionModel.getSelectedIndex() != (currentMenu
+						.getContent().size() - 1)) {
+					selectionModel.selectNext();
+				} else {
+					selectionModel.selectFirst();
+				}
 			}
 		});
 	}
@@ -69,8 +74,22 @@ public class MenuList {
 		beep();
 		MenuElement menuElement = selectionModel.getSelectedItem();
 		if (menuElement != null) {
-			enterLowerMenu(menuElement);
+			enterLowerMenuOrAction(menuElement);
 		}
+	}
+
+	public void exit() {
+		beep();
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				setUpperMenu(currentMenu.getParentMenu());
+			}
+		});
+	}
+
+	private void beep() {
+		Toolkit.getDefaultToolkit().beep();
 	}
 
 	public void actionOnRecognizedString(String pattern) {
@@ -82,51 +101,46 @@ public class MenuList {
 		case "kovetkezo":
 			next();
 			break;
+		case "kivalaszt":
+			enter();
+			break;
+		case "vissza":
+			exit();
+			break;
 		default:
 			MenuElement matchingElement = currentMenu.menuForSpeech(pattern);
 			if (matchingElement != null) {
-				enterLowerMenu(matchingElement);
+				System.out.println("found " + matchingElement);
+				enterLowerMenuOrAction(matchingElement);
 			}
 		}
 	}
 
-	private void enterLowerMenu(MenuElement menuElement) {
-		final Menu selectedMenu = menuElement.getChild();
-		if (selectedMenu != null) {
-			currentMenu.setPosition(selectionModel.getSelectedIndex());
-			currentMenu = selectedMenu;
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					listView.setItems(selectedMenu.getContent());
+	private void enterLowerMenuOrAction(final MenuElement menuElement) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				Menu lowerMenu = menuElement.getChild();
+				if (lowerMenu != null) {
+					currentMenu.setPosition(selectionModel.getSelectedIndex());
+					currentMenu = lowerMenu;
+					listView.setItems(lowerMenu.getContent());
 					int selectionIndex = currentMenu.getSelectedOptionIndex();
 					selectionModel.select(selectionIndex);
+				} else {
+					menuElement.action();
+					MenuElement selectedMenu = currentMenu.getSelectedOption();
+					selectionLabel.setText(selectedMenu.toString());
+					setUpperMenu(currentMenu.getParentMenu());
 				}
-			});
-		} else {
-			menuElement.action();
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					selectionLabel.setText(currentMenu.getSelectedOption()
-							.toString());
-				}
-			});
-			exit();
-		}
+			}
+		});
 	}
 
-	public void exit() {
-		beep();
-		final Menu upperMenu = currentMenu.getParentMenu();
+	private void setUpperMenu(Menu upperMenu) {
 		if (upperMenu != null) {
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					listView.setItems(upperMenu.getContent());
-					selectionModel.select(upperMenu.getPosition());
-				}
-			});
+			listView.setItems(upperMenu.getContent());
+			selectionModel.select(upperMenu.getPosition());
 			currentMenu = upperMenu;
 		}
 	}
