@@ -28,6 +28,7 @@ public class RecorderThread implements Runnable {
 		System.out.println("recording started");
 		beep();
 		inputLine.start();
+		initServer();
 
 		while (!stopped) {
 			inputLine.read(buffer, 0, buffer.length);
@@ -42,6 +43,12 @@ public class RecorderThread implements Runnable {
 
 	private void beep() {
 		Toolkit.getDefaultToolkit().beep();
+	}
+
+	private void initServer() {
+		RecognizerCommand initCommand = new RecognizerCommand(
+				ServerCommand.INIT, "", true);
+		recognizerConnection.send(initCommand);
 	}
 
 	private void sendRecordedData() {
