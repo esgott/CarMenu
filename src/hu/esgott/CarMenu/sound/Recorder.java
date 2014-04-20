@@ -39,12 +39,13 @@ public class Recorder {
 	}
 
 	public void record() {
-		stopRunningRecording();
-		statusBar.setRecordMode(true);
-		recorderThread = new RecorderThread(inputLine, recognizerConnection,
-				this);
-		thread = new Thread(recorderThread);
-		thread.start();
+		if (!running()) {
+			statusBar.setRecordMode(true);
+			recorderThread = new RecorderThread(inputLine,
+					recognizerConnection, this);
+			thread = new Thread(recorderThread);
+			thread.start();
+		}
 	}
 
 	public synchronized void stop() {
