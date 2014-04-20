@@ -12,13 +12,16 @@ public class StatusBar {
 			"hu/esgott/CarMenu/menu/icon/leap.png");
 	private ImageView exitImage = new ImageView(
 			"hu/esgott/CarMenu/menu/icon/exit.png");
+	private ImageView enterImage = new ImageView(
+			"hu/esgott/CarMenu/menu/icon/enter.png");
 	private ImageView micImage = new ImageView(
 			"hu/esgott/CarMenu/menu/icon/mic.png");
 
 	public StatusBar() {
-		panel.getChildren().addAll(leapImage, exitImage, micImage);
+		panel.getChildren().addAll(leapImage, exitImage, enterImage, micImage);
 		leapImage.setVisible(false);
 		exitImage.setVisible(false);
+		enterImage.setVisible(false);
 		micImage.setVisible(false);
 	}
 
@@ -40,6 +43,15 @@ public class StatusBar {
 			@Override
 			public void run() {
 				exitImage.setVisible(exitMode);
+			}
+		});
+	}
+
+	public void setEnterMode(final boolean enterMode) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				enterImage.setVisible(enterMode);
 			}
 		});
 	}

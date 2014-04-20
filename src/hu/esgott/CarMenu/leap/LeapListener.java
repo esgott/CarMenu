@@ -19,25 +19,26 @@ public class LeapListener extends Listener {
 	private MenuList menuList;
 	private StatusBar statusBar;
 	private ExitTimer exitTimer;
+	private EnterTimer enterTimer;
 	private SpeechTimer speechTimer;
 	private int previousSwipeGestureId;
 	private int frameUntilNextSwipe = 0;
 	private boolean swipeProcessed;
 	private static final int MAX_SWYPE_FREQ = 10;
-	private static final float MIN_SWIPE_LENGTH = 300.0f;
+	private static final float MIN_SWIPE_LENGTH = 200.0f;
 	private static final float SPEED_LIMIT = 20.0f;
 
 	public LeapListener(MainWindow mainWindow) {
 		menuList = mainWindow.getMenuList();
 		statusBar = mainWindow.getStatusBar();
 		exitTimer = new ExitTimer(menuList, statusBar);
+		enterTimer = new EnterTimer(menuList, statusBar);
 		speechTimer = new SpeechTimer(mainWindow.getRecorder());
 	}
 
 	@Override
 	public void onConnect(Controller controller) {
 		controller.enableGesture(Gesture.Type.TYPE_SWIPE);
-		controller.enableGesture(Gesture.Type.TYPE_SCREEN_TAP);
 		Config config = controller.config();
 		if (config.setFloat("Gesture.Swipe.MinLength", MIN_SWIPE_LENGTH)) {
 			config.save();
@@ -61,19 +62,12 @@ public class LeapListener extends Listener {
 
 	private void handleGesture(Gesture gesture) {
 		switch (gesture.type()) {
-		case TYPE_SCREEN_TAP:
-			handleTapGesture();
-			break;
 		case TYPE_SWIPE:
 			handleSwipeGesture(gesture);
 			break;
 		default:
 			break;
 		}
-	}
-
-	private void handleTapGesture() {
-		menuList.enter();
 	}
 
 	private void handleSwipeGesture(Gesture gesture) {
@@ -109,6 +103,8 @@ public class LeapListener extends Listener {
 	private void enableActionOnFingerNum(int fingerNum) {
 		if (fingerNum <= 1) {
 			speechTimer.recordGestureStarted();
+		} else if (fingerNum == 2) {
+			enterTimer.enterSituation();
 		} else if (fingerNum == 5) {
 			exitTimer.exitSituation();
 		}
@@ -116,6 +112,7 @@ public class LeapListener extends Listener {
 
 	private void disableActions() {
 		exitTimer.notExitSituation();
+		enterTimer.notEnterSituation();
 		speechTimer.recordGestureFinished();
 	}
 
@@ -126,6 +123,7 @@ public class LeapListener extends Listener {
 
 	public void dispose() {
 		exitTimer.dispose();
+		enterTimer.dispose();
 		speechTimer.dispose();
 	}
 
