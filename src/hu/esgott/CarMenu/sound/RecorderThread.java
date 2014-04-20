@@ -1,6 +1,6 @@
 package hu.esgott.CarMenu.sound;
 
-import java.io.ByteArrayOutputStream;
+import java.awt.Toolkit;
 import java.nio.ByteBuffer;
 
 import javax.sound.sampled.TargetDataLine;
@@ -9,37 +9,39 @@ public class RecorderThread implements Runnable {
 
 	private static final int BUFFER_SIZE = 1024;
 	private static final int QUERY_FREQUENCY = 4;
-	private TargetDataLine line;
+	private TargetDataLine inputLine;
 	private byte[] buffer = new byte[BUFFER_SIZE];
-	private ByteArrayOutputStream outputStream;
 	private RecognizerServerConnection recognizerConnection;
 	private Recorder parent;
 	private boolean stopped = false;
 	private int leftUntilQuery = QUERY_FREQUENCY;
 
 	public RecorderThread(TargetDataLine line,
-			ByteArrayOutputStream outputStream,
 			RecognizerServerConnection recognizerConnection, Recorder parent) {
-		this.line = line;
-		this.outputStream = outputStream;
+		this.inputLine = line;
 		this.recognizerConnection = recognizerConnection;
 		this.parent = parent;
 	}
 
 	@Override
 	public void run() {
-		System.out.println("recorder thread started");
-		line.start();
+		System.out.println("recording started");
+		beep();
+		inputLine.start();
 
 		while (!stopped) {
-			int numBytesRead = line.read(buffer, 0, buffer.length);
+			inputLine.read(buffer, 0, buffer.length);
 			sendRecordedData();
 			sendIfQueryExpired();
-			outputStream.write(buffer, 0, numBytesRead);
 		}
 
-		line.stop();
-		System.out.println("recorder thread finished");
+		inputLine.stop();
+		beep();
+		System.out.println("recording finished");
+	}
+
+	private void beep() {
+		Toolkit.getDefaultToolkit().beep();
 	}
 
 	private void sendRecordedData() {
