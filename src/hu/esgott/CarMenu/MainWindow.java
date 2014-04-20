@@ -26,12 +26,12 @@ public class MainWindow extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		windowScene = new MainWindowScene(this);
-		initializeLeap();
 		primaryStage.setTitle("CarMenu");
 		Scene scene = windowScene.getScene();
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		createRecognizerClasses();
+		initializeLeap();
 	}
 
 	private void initializeLeap() {
