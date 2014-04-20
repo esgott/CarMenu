@@ -39,6 +39,7 @@ public class Recorder {
 	}
 
 	public void record() {
+		stopRunningRecording();
 		statusBar.setRecordMode(true);
 		recorderThread = new RecorderThread(inputLine, recognizerConnection,
 				this);
@@ -47,6 +48,11 @@ public class Recorder {
 	}
 
 	public synchronized void stop() {
+		stopRunningRecording();
+		statusBar.setRecordMode(false);
+	}
+
+	private void stopRunningRecording() {
 		if (recorderThread != null) {
 			recorderThread.stop();
 			try {
@@ -57,7 +63,6 @@ public class Recorder {
 			}
 			recorderThread = null;
 		}
-		statusBar.setRecordMode(false);
 	}
 
 	public void matchFound(String matchedString) {
