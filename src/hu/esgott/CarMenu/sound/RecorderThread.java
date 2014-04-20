@@ -81,7 +81,7 @@ public class RecorderThread implements Runnable {
 					traceBackCommand.setCallback(new ResponseCallback() {
 						@Override
 						public void call(String response) {
-							parseServerResponse(response);
+							parent.matchFound(response);
 						}
 					});
 					recognizerConnection.send(traceBackCommand);
@@ -89,18 +89,6 @@ public class RecorderThread implements Runnable {
 			}
 		});
 		recognizerConnection.send(command);
-	}
-
-	private void parseServerResponse(String response) {
-		char[] splitterChar = new char[1];
-		splitterChar[0] = 9;
-		String splitterString = new String(splitterChar);
-		String[] lines = response.split(splitterString);
-		System.out.println("LINES:");
-		for (String line : lines) {
-			System.out.println(line);
-		}
-		parent.matchFound(lines[5]);
 	}
 
 	public synchronized void stop() {

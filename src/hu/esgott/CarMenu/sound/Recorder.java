@@ -1,5 +1,8 @@
 package hu.esgott.CarMenu.sound;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import hu.esgott.CarMenu.menu.MenuList;
 import hu.esgott.CarMenu.menu.StatusBar;
 
@@ -66,9 +69,24 @@ public class Recorder {
 		}
 	}
 
-	public void matchFound(String matchedString) {
+	public void matchFound(String response) {
 		stop();
+		String matchedString = parseResponse(response);
 		menu.actionOnRecognizedString(matchedString);
+	}
+
+	private String parseResponse(String response) {
+		String[] lines = response.split("\n");
+		String matchLine = lines[1];
+		// third column
+		Pattern pattern = Pattern.compile("\\s*\\d+\\s+\\d+\\s+(\\S+)\\s+#.*");
+		Matcher matcher = pattern.matcher(matchLine);
+		if (matcher.find()) {
+			return matcher.group(1);
+		} else {
+			System.out.println("response not understood");
+			return "";
+		}
 	}
 
 	public boolean running() {
