@@ -2,7 +2,7 @@ package hu.esgott.CarMenu.sound;
 
 public class RecognizerServerConnection {
 
-	private final static String GRAMMAR_FILE = "lex_sp_00138.flx";
+	private final static String GRAMMAR_FILE = "lex_sp_00146.flx";
 	private SocketThread socketThread;
 	private Thread thread;
 
