@@ -15,7 +15,11 @@ public class VolumeMenuBuilder implements MenuBuilder {
 	public ObservableList<MenuElement> build(Menu caller) {
 		ObservableList<MenuElement> list = FXCollections.observableArrayList();
 		for (Integer i = 1; i <= 30; i++) {
-			list.add(new MenuElement(i.toString(), caller, null));
+			if (i == 10) {
+				list.add(new MenuElement(i.toString(), caller, null, "normal"));
+			} else {
+				list.add(new MenuElement(i.toString(), caller, null));
+			}
 		}
 		return list;
 	}

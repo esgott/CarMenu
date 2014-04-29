@@ -10,3 +10,4 @@ elozo	elözö
 kovetkezo	következö
 kivalaszt	kiválaszt
 vissza	vissza
+normal	normál
