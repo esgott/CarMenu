@@ -16,7 +16,7 @@ public class SettingsMenuBuilder implements MenuBuilder {
 	@Override
 	public ObservableList<MenuElement> build(Menu caller) {
 		ObservableList<MenuElement> list = FXCollections.observableArrayList();
-		list.add(new MenuElement("Parkolóradar", caller, parkingRadarMenu));
+		list.add(new MenuElement("Parkolóradar", caller, parkingRadarMenu, "parkoloradar"));
 		return list;
 	}
 

@@ -14,8 +14,8 @@ public class ParkingRadarMenuBuilder implements MenuBuilder {
 	@Override
 	public ObservableList<MenuElement> build(Menu caller) {
 		ObservableList<MenuElement> list = FXCollections.observableArrayList();
-		list.add(new MenuElement("Be", caller, null));
-		list.add(new MenuElement("Ki", caller, null));
+		list.add(new MenuElement("Bekapcsolva", caller, null, "bekapcsolva"));
+		list.add(new MenuElement("Kikapcsolva", caller, null, "kikapcsolva"));
 		return list;
 	}
 
