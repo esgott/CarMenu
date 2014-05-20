@@ -68,7 +68,6 @@ public class MainWindow extends Application {
 	@Override
 	public void stop() throws Exception {
 		leapListener.dispose();
-		recorder.dispose();
 		recognizerConnection.dispose();
 		leapController.removeListener(leapListener);
 	}
