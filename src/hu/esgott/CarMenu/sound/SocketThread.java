@@ -1,29 +1,27 @@
 package hu.esgott.CarMenu.sound;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 public class SocketThread implements Runnable {
 
-	private LinkedBlockingQueue<RecognizerCommand> queue = new LinkedBlockingQueue<>();
-	private String ip;
-	private int port;
+	private BlockingQueue<RecognizerCommand> queue;
+	private SocketFactory socketFactory;
 	private Socket socket;
-	private BufferedInputStream inputStream;
-	private BufferedOutputStream outputStream;
+	private InputStream inputStream;
+	private OutputStream outputStream;
 	private boolean running = true;
 
-	public SocketThread(String serverIp, int serverPort) {
-		ip = serverIp;
-		port = serverPort;
+	public SocketThread(SocketFactory socketFactory) {
+		this.socketFactory = socketFactory;
+		this.queue = socketFactory.createQueue();
 	}
 
 	public void sendCommand(RecognizerCommand command) {
@@ -38,6 +36,7 @@ public class SocketThread implements Runnable {
 	public void run() {
 		try {
 			connect();
+			System.out.println("connected");
 			while (running) {
 				sendNextCommand();
 			}
@@ -56,18 +55,16 @@ public class SocketThread implements Runnable {
 		}
 	}
 
-	private void connect() throws UnknownHostException, IOException {
-		socket = new Socket(ip, port);
+	private void connect() throws IOException {
+		socket = socketFactory.createSocket();
 		socket.setSoTimeout(5000);
-		inputStream = new BufferedInputStream(socket.getInputStream());
-		outputStream = new BufferedOutputStream(socket.getOutputStream());
-		System.out.println("connected");
+		inputStream = socketFactory.createInputStream(socket);
+		outputStream = socketFactory.createOutoutStream(socket);
 	}
 
 	private void sendNextCommand() throws IOException, InterruptedException {
 		RecognizerCommand command = queue.poll(500, TimeUnit.MILLISECONDS);
 		if (command != null) {
-			System.out.println("start sending command");
 			if (command.binary()) {
 				sendTextData(command.getCommand());
 				sendBinaryData(command.getBinaryData());
@@ -153,7 +150,6 @@ public class SocketThread implements Runnable {
 	}
 
 	public void stop() {
-		System.out.println("stopping socket thread");
 		running = false;
 	}
 

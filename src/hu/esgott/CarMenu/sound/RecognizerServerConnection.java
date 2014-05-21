@@ -7,7 +7,8 @@ public class RecognizerServerConnection {
 	private Thread thread;
 
 	public RecognizerServerConnection() {
-		socketThread = new SocketThread("152.66.246.33", 2605);
+		socketThread = new SocketThread(
+				new SocketFactory("152.66.246.33", 2605));
 		thread = new Thread(socketThread);
 		System.out.println("starting thread");
 		thread.start();
