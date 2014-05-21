@@ -2,7 +2,7 @@ Response Parsing Story
 
 Narrative:
 In order to communicate with the recognizer server
-As a user
+As a developer
 I want to ensure that the response correctly parsed
 
 Scenario: A response of succesful recognition arrives

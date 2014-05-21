@@ -55,14 +55,14 @@ public class SocketThread implements Runnable {
 		}
 	}
 
-	private void connect() throws IOException {
+	public void connect() throws IOException {
 		socket = socketFactory.createSocket();
 		socket.setSoTimeout(5000);
 		inputStream = socketFactory.createInputStream(socket);
 		outputStream = socketFactory.createOutoutStream(socket);
 	}
 
-	private void sendNextCommand() throws IOException, InterruptedException {
+	public void sendNextCommand() throws IOException, InterruptedException {
 		RecognizerCommand command = queue.poll(500, TimeUnit.MILLISECONDS);
 		if (command != null) {
 			if (command.binary()) {

@@ -15,4 +15,13 @@ public enum ServerCommand {
 	String getCommand() {
 		return command;
 	}
+
+	static ServerCommand findByCommandText(String commandText) {
+		for (ServerCommand c : values()) {
+			if (c.getCommand().equals(commandText)) {
+				return c;
+			}
+		}
+		return null;
+	}
 }
